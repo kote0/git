@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<protocol status="errors" msg="Не пройдены обязательные контроли" version="1.0">
+  <title>
+    <item name="dt_send" value="24.04.2017 15:56:19" />
+    <item name="dt_load" value="24.04.2017 15:56:19" />
+    <item name="ko" value="00222060" />
+    <item name="obj" value="00222060" />
+    <item name="file" value="0601009_001_001_00222060_2016_0101__201704070759_7a24bab9-82fc-47ae-b587-a74e00839112.xml" />
+    <item name="form_name" value="" />
+    <item name="form_code" value="601009001001" />
+    <item name="year" value="2016" />
+    <item name="period" value="101" />
+  </title>
+  <group type="errrros" msg="Ошибки. Контроль проводился с использованием версии шаблона 601009001001 - 29-03-2017">
+    <control idc="39" msg="39. Стр.659=610+616+621+625+626+627-628+629-630-631-632+633+635+636+637+638+639+646+648+649+650+651+656+657+658." gr_st="Раздел: 3, Строки: 659" />
+  </group>
+</protocol>
