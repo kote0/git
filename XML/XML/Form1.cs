@@ -18,7 +18,8 @@ namespace XML
             InitializeComponent();
         }
         XDocument XDoc = XDocument.Load("1.xml");
-        XDocument xDoc1;
+        XElement ElemSelect;
+        string attr;
         private void ClearList()
         {
             listBox1.Items.Clear();
@@ -60,6 +61,7 @@ namespace XML
             ClearList();
             if (textBox1.Text != "")
             {
+                //XDoc.Descendants().Where(i => i.Name == textBox1.Text);
                 var search = XDoc.Descendants(textBox1.Text);
                 foreach (var t in search)
                 {
@@ -88,6 +90,7 @@ namespace XML
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            comboBox2.Text = "";
             comboBox2.Items.Clear();
             textBox3.Text = "";
             if (listBox1.Items[listBox1.SelectedIndex].ToString() == "..")
@@ -100,13 +103,14 @@ namespace XML
             }
             else
             {
-                xDoc1 = XDocument.Parse(listBox1.Items[listBox1.SelectedIndex].ToString());
-                textBox2.Text =  xDoc1.Root.Name.ToString();
-                foreach (var attr in xDoc1.Descendants(textBox2.Text).Attributes())
+                ElemSelect = XElement.Parse(listBox1.Items[listBox1.SelectedIndex].ToString());
+                textBox2.Text = ElemSelect.Name.ToString();
+                foreach (var attr in ElemSelect.Attributes())
                 {
                     comboBox2.Items.Add(attr.Name.ToString());
                 }
             }
+            
         }
 
         
@@ -119,9 +123,7 @@ namespace XML
             }
             else
             {
-                xDoc1 = XDocument.Parse(listBox1.Items[listBox1.SelectedIndex].ToString());
-                //listBox1.Items.Add(xDoc1.Root.Name.ToString());
-                SearchT(xDoc1.Root.Name.ToString());
+                SearchT(ElemSelect.Name.ToString());
             }
         }
 
@@ -131,29 +133,62 @@ namespace XML
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            xDoc1 = XDocument.Parse(listBox1.Items[listBox1.SelectedIndex].ToString());
             string node = textBox2.Text;
-            string attr = comboBox2.Items[comboBox2.SelectedIndex].ToString();
-            textBox3.Text = xDoc1.Element(node).Attribute(attr).Value;
+            attr = comboBox2.Items[comboBox2.SelectedIndex].ToString();
+            textBox3.Text = ElemSelect.Attribute(attr).Value;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            XElement Xe = XElement.Parse(listBox1.Items[listBox1.SelectedIndex].ToString());
-            XDoc.Descendants().Where(i => i.ToString() == Xe.ToString()).Remove();
+            XDoc.Descendants().Where(i => i.ToString() == ElemSelect.ToString()).Remove();
             SelectAll();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            XElement Xe = XElement.Parse(listBox1.Items[listBox1.SelectedIndex].ToString());
-            string attr = comboBox2.Items[comboBox2.SelectedIndex].ToString();
-            var w = XDoc.Descendants().Where(i => i.ToString() == Xe.ToString());
-            foreach ( var r in w)
+            var w = XDoc.Descendants(ElemSelect.Name).Where(i => i.ToString() == ElemSelect.ToString());
+            w.Attributes().Where(i => i.Name == attr).Remove();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            var attrlist = XDoc.Descendants(ElemSelect.Name).Where(i => i.ToString() == ElemSelect.ToString()).Attributes().Where(i => i.Name == attr);
+            foreach (var w in attrlist)
             {
-                r.Attribute(attr).Remove();
+                w.Value = textBox3.Text;
             }
+            XDoc.Save("1.xml");
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+            {
+                //отмечен
+                textBox4.Visible = true;
+                textBox5.Visible = true;
+                comboBox3.Visible = true;
+                button5.Visible = true;
+                button4.Visible = true;
+
+            }
+            else
+            {
+                textBox4.Visible = false;
+                textBox5.Visible = false;
+                comboBox3.Visible = false;
+                button5.Visible = false;
+                button4.Visible = false;
+            }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
             
+            openFileDialog1.ShowDialog();
+            string fullname = openFileDialog1.FileName;
+            XDoc = XDocument.Load(fullname);
+            SelectAll();
         }
     }
 }
